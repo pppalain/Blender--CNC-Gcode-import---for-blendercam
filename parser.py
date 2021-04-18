@@ -74,7 +74,7 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
             bpy.data.collections[collection_name].objects.link(obj) 
 
     obj.scale=(0.001, 0.001, 0.001)
-    
+
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
 
@@ -131,7 +131,6 @@ class GcodeParser:
                                 print(self.model.toolnumber)
                             elif code[0] =='X' or code[0]=='Y' or code[0]=='Z':
                                 self.line=self.last_command+' '+self.line
-                                print('Corrected '+str(self.line))
                                 self.parseLine()
                             else:
                                 pass
@@ -156,12 +155,10 @@ class GcodeParser:
         def parse_G1(self, args, type="G1"):
                 # G1: Controlled move
                 self.model.do_G1(self.parseArgs(args), type)
-                print("parsing G1 "+str(self.parseArgs(args))+" type "+type)
 
         def parse_G0(self, args, type="G0"):
                 # G1: Controlled move
                 self.model.do_G1(self.parseArgs(args), type)
-                print("parsing G0")
 
 
                         
