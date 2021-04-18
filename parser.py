@@ -14,6 +14,7 @@ def segments_to_meshdata(segments):#edges only on extrusion
         del_offset=0 #to travel segs in a row, one gets deleted, need to keep track of index for edges
         for i in range(len(segs)):
                 if i>=len(segs)-1:
+
                         if segs[i].style == 'extrude':
                                 verts.append([segs[i].coords['X'],segs[i].coords['Y'],segs[i].coords['Z'] ])
 
@@ -26,6 +27,7 @@ def segments_to_meshdata(segments):#edges only on extrusion
                         edges.append([i-del_offset,(i-del_offset)+1])
 
                 #mitte, current and next are extrusion, only add next, current is already in vert list
+
                 if segs[i].style == 'extrude' and segs[i+1].style == 'extrude':
                         verts.append([segs[i+1].coords['X'],segs[i+1].coords['Y'],segs[i+1].coords['Z'] ])
                         edges.append([i-del_offset,(i-del_offset)+1])
@@ -71,8 +73,9 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
             bpy.context.scene.collection.children.link(collection) #link collection to main scene
             bpy.data.collections[collection_name].objects.link(obj) 
 
-
-
+    obj.scale=(0.001, 0.001, 0.001)
+    
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
 
 class GcodeParser:
@@ -115,17 +118,26 @@ class GcodeParser:
                 args = comm[1] if (len(comm)>1) else None
                 
                 if code:
+                        if code == 'G01': code = 'G1'
+                        if code == 'G00': code = 'G0'
+
                         if hasattr(self, "parse_"+code):
                                 getattr(self, "parse_"+code)(args)
-                                #self.parseArgs(args)
+                                self.last_command=code
                         else:
                             if code[0] == "T":
                                 
                                 self.model.toolnumber = int(code[1:])
-                                #print(self.model.toolnumber)
+                                print(self.model.toolnumber)
+                            elif code[0] =='X' or code[0]=='Y' or code[0]=='Z':
+                                self.line=self.last_command+' '+self.line
+                                print('Corrected '+str(self.line))
+                                self.parseLine()
                             else:
                                 pass
-                                #print("incorrect gcode")#self.warn("Unknown code '%s'"%code)
+
+                                print("Unsupported gcode " + str(code))#self.warn("Unknown code '%s'"%code)
+
                 
         def parseArgs(self, args):
                 dic = {}
@@ -144,10 +156,13 @@ class GcodeParser:
         def parse_G1(self, args, type="G1"):
                 # G1: Controlled move
                 self.model.do_G1(self.parseArgs(args), type)
+                print("parsing G1 "+str(self.parseArgs(args))+" type "+type)
 
         def parse_G0(self, args, type="G0"):
                 # G1: Controlled move
                 self.model.do_G1(self.parseArgs(args), type)
+                print("parsing G0")
+
 
                         
         def parse_G90(self, args):
@@ -251,7 +266,7 @@ class GcodeModel:
                 #if seg.coords['X'] != self.relative['X'] or seg.coords['Y'] != self.relative['Y'] or seg.coords['Z'] != self.relative['Z']:  <---This is wrong when gcode includes G92 (offset) commands
                 if seg.coords['X'] != self.relative['X']+self.offset["X"] or seg.coords['Y'] != self.relative['Y']+self.offset["Y"] or seg.coords['Z'] != self.relative['Z']+self.offset["Z"]:     
                     self.addSegment(seg)
-                    
+
                     
 
                 # update model coords
@@ -332,9 +347,9 @@ class GcodeModel:
                         
                         # some horizontal movement, and positive extruder movement: extrusion
                         if (
-                                ( (seg.coords["X"] != coords["X"]) or (seg.coords["Y"] != coords["Y"]) or (seg.coords["Z"] != coords["Z"]) ) and
-                                (seg.coords["E"] > 0 ) ): #!= coords["E"]
+                                ( (seg.coords["X"] != coords["X"]) or (seg.coords["Y"] != coords["Y"]) or (seg.coords["Z"] != coords["Z"]) )  ): #!= coords["E"]
                                 style = "extrude"
+                            ##force extrude if there is some movement
 
 
                         #segments to layer lists
