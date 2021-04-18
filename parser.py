@@ -74,7 +74,8 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
             bpy.data.collections[collection_name].objects.link(obj) 
 
     obj.scale=(0.001, 0.001, 0.001)
-
+    bpy.context.view_layer.objects.active=obj
+    obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
 

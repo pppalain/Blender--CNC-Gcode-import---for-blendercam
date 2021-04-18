@@ -1,4 +1,4 @@
-# Blender-CNC Gcode-Importer
+# Blender-CNC Gcode-Importer for Blendercam
 G-code importer with some extra functionalities to convert from G-code to Blender mesh.  
 Having access to the toolspaths directly let's you do some interesting things conventional slicers can't do.  
 
