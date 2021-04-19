@@ -116,10 +116,16 @@ class GcodeParser:
                 # code is fist word, then args
                 comm = command.split(None, 1)
                 code = comm[0] if (len(comm)>0) else None
+                print(code)
+                print(type(code))
+                if code:
+                        if (len(code)) >3:
+                                code='d'
                 args = comm[1] if (len(comm)>1) else None
                 
                 if code:
-                        if code == 'G01': code = 'G1'
+                        if (len(code)) > 3: code = 'd'  #invalid code or 2 codes merged without space or S code
+                        if code == 'G01' : code = 'G1'
                         if code == 'G00': code = 'G0'
 
                         if hasattr(self, "parse_"+code):
