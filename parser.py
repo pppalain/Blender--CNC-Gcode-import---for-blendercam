@@ -104,27 +104,32 @@ class GcodeParser:
                 
         def parseLine(self):
                 # strip comments:
+                a_old=""
                 bits = self.line.split(';',1)
                 if (len(bits) > 1):
                     GcodeParser.comment = bits[1]
                 
                 # extract & clean command
                 command = bits[0].strip()
-                
+                s=""
+                a=""
+                for i in range(len(command)):
+                        a=command[i]
+                        if a.isupper() and a_old != ' ' and i>0:
+                                s += ' '
+                        s += a
+                        a_old = a
+
+                print(s)
+                command = s
                 # TODO strip logical line number & checksum
                 
                 # code is fist word, then args
                 comm = command.split(None, 1)
                 code = comm[0] if (len(comm)>0) else None
-                print(code)
-                print(type(code))
-                if code:
-                        if (len(code)) >3:
-                                code='d'
                 args = comm[1] if (len(comm)>1) else None
                 
                 if code:
-                        if (len(code)) > 3: code = 'd'  #invalid code or 2 codes merged without space or S code
                         if code == 'G01' : code = 'G1'
                         if code == 'G00': code = 'G0'
 
