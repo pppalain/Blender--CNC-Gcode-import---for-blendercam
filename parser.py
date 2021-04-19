@@ -77,6 +77,7 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
     bpy.context.view_layer.objects.active=obj
     obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    bpy.ops.object.convert(target='CURVE')
 
 
 class GcodeParser:
@@ -104,7 +105,7 @@ class GcodeParser:
                 
         def parseLine(self):
                 # strip comments:
-                a_old=""
+
                 bits = self.line.split(';',1)
                 if (len(bits) > 1):
                     GcodeParser.comment = bits[1]
@@ -113,13 +114,13 @@ class GcodeParser:
                 command = bits[0].strip()
                 s=""
                 a=""
-                for i in range(len(command)):
+                a_old=""
+                for i in range(len(command)):   # check each character in the line
                         a=command[i]
-                        if a.isupper() and a_old != ' ' and i>0:
+                        if a.isupper() and a_old != ' ' and i>0:  #add a space if upper case letter and no space is found before
                                 s += ' '
                         s += a
                         a_old = a
-
                 print(s)
                 command = s
                 # TODO strip logical line number & checksum
