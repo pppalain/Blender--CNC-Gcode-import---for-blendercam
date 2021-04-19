@@ -15,7 +15,7 @@ Use the 'subdivide' option in the importer for that.
 
 ### Compatibility
 Add-On works with Blender 2.8. I tested on 2.92 with G-code from f-engrave andd carbide create.  
-All G1 and G0 commands with an E-value get drawn as an edge. (Travel lines get omitted)
+All G1 and G0 commands get drawn as an edge. (Travel lines get omitted)
 
 
 
