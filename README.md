@@ -14,7 +14,7 @@ Use the 'subdivide' option in the importer for that.
 <img src=https://raw.githubusercontent.com/Heinz-Loepmeier/wiki-sources/main/gcode-importer-docs/import.gif>
 
 ### Compatibility
-Add-On works with Blender 2.8. I tested with G-code from non 3d printer source.  
+Add-On works with Blender 2.8. I tested on 2.92 with G-code from f-engrave andd carbide create.  
 All G1 and G0 commands with an E-value get drawn as an edge. (Travel lines get omitted)
 
 
