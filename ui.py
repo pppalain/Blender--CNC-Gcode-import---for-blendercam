@@ -38,7 +38,8 @@ class import_settings(PropertyGroup):
         description="Only Subdivide gcode segments that are bigger than 'Segment length' ",
         default = False
         )
-
+    output: bpy.props.EnumProperty(name="output type", items=(
+        ('mesh', 'Mesh', 'Make a mesh output'), ('curve', 'Curve', 'Make curve output')), default='curve')
     max_segment_size: FloatProperty(
         name = "",
         description = "Only Segments bigger then this value get subdivided",
@@ -75,6 +76,7 @@ class OBJECT_PT_CustomPanel(Panel):
         mytool = scene.my_tool
         
         #layout.prop(mytool, "gcode_path")     
+        layout.prop(mytool, 'output')
         layout.prop(mytool, "split_layers")
          
         

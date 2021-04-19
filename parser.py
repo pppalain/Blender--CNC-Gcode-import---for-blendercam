@@ -77,7 +77,8 @@ def obj_from_pydata(name, verts, edges=None, close=True, collection_name=None):
     bpy.context.view_layer.objects.active=obj
     obj.select_set(True)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    bpy.ops.object.convert(target='CURVE')
+    if bpy.context.scene.my_tool.output == 'curve':
+        bpy.ops.object.convert(target='CURVE')
 
 
 class GcodeParser:
